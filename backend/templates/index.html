@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Eterno: Rosas eternas, detalles personalizados y perfumes premium. Regalos duraderos para ocasiones especiales. Envíos rápidos y atención personalizada.">
+    <meta name="keywords" content="rosas eternas, detalles personalizados, perfumes premium, regalos eternos, tienda eterno">
+    <title>Eterno - Rosas Eternas, Detalles y Perfumes</title>
+    <style>
+        body { font-family: 'Arial', sans-serif; margin: 0; padding: 0; background-color: #f9f9f9; color: #333; line-height: 1.6; }
+        header { background-color: #d32f2f; color: white; padding: 20px; text-align: center; }
+        nav { background-color: #b71c1c; padding: 10px; text-align: center; }
+        nav a { color: white; margin: 0 15px; text-decoration: none; font-weight: bold; }
+        .hero { background-image: url('https://via.placeholder.com/1200x400?text=Eterno+-+Belleza+Eterna'); background-size: cover; padding: 100px 20px; text-align: center; color: white; }
+        .section { padding: 40px 20px; max-width: 1200px; margin: 0 auto; }
+        .products { display: flex; flex-wrap: wrap; justify-content: space-around; }
+        .product { background: white; border: 1px solid #ddd; padding: 20px; margin: 10px; width: 300px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .product img { width: 100%; height: 200px; object-fit: cover; }
+        .horarios { background: white; padding: 20px; border: 1px solid #ddd; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .pedidos { background: #f0f0f0; padding: 20px; }
+        .cta { background-color: #4caf50; color: white; padding: 15px; text-align: center; font-size: 18px; }
+        .cta button { background-color: #388e3c; border: none; padding: 10px 20px; color: white; font-size: 16px; cursor: pointer; }
+        footer { background-color: #333; color: white; text-align: center; padding: 20px; }
+        @media (max-width: 768px) { .products { flex-direction: column; } }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Eterno</h1>
+        <p>Rosas Eternas, Detalles Personalizados y Perfumes Premium</p>
+    </header>
+    <nav>
+        <a href="#productos">Productos</a>
+        <a href="#horarios">Horarios</a>
+        <a href="#pedidos">Pedidos</a>
+        <a href="#contacto">Contacto</a>
+    </nav>
+
+    <section class="hero">
+        <h2>¡Regalos que Perduran en el Tiempo!</h2>
+        <p>Descubre nuestras rosas eternas, detalles únicos y perfumes inolvidables. Ideal para aniversarios, cumpleaños y sorpresas románticas.</p>
+        <a href="#productos"><button>Explorar Productos</button></a>
+    </section>
+
+    <section id="productos" class="section">
+        <h2>Nuestros Productos</h2>
+        <div class="products">
+            <div class="product">
+                <img src="https://via.placeholder.com/300x200?text=Rosas+Eternas" alt="Rosas Eternas">
+                <h3>Rosas Eternas</h3>
+                <p>Flores preservadas con técnicas avanzadas que mantienen su color y forma por años. Perfectas para regalos duraderos y sin mantenimiento. Disponibles en colores rojo, rosa y blanco. Precio desde $25. Incluye envío gratuito en pedidos superiores a $50.</p>
+                <button onclick="window.location.href='https://tu-tienda-shopify.com/products/rosas-eternas'">Comprar Ahora</button>
+            </div>
+            <div class="product">
+                <img src="https://via.placeholder.com/300x200?text=Detalles+Personalizados" alt="Detalles Personalizados">
+                <h3>Detalles Personalizados</h3>
+                <p>Accesorios únicos como cajas decoradas, tarjetas grabadas y adornos temáticos. Personaliza con mensajes especiales para hacer cada regalo inolvidable. Opciones de grabado disponibles. Precio desde $15. Combínalos con perfumes para un regalo completo.</p>
+                <button onclick="window.location.href='https://tu-tienda-shopify.com/products/detalles-personalizados'">Comprar Ahora</button>
+            </div>
+            <div class="product">
+                <img src="https://via.placeholder.com/300x200?text=Perfumes+Premium" alt="Perfumes Premium">
+                <h3>Perfumes Premium</h3>
+                <p>Fragancias exclusivas con notas florales, cítricas y amaderadas. Duración de hasta 8 horas. Envases elegantes ideales para regalos. Variedades como "Rosa Eterna" y "Floral Nocturno". Precio desde $30. Descuento del 10% en combos.</p>
+                <button onclick="window.location.href='https://tu-tienda-shopify.com/products/perfumes-premium'">Comprar Ahora</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="horarios" class="section">
+        <h2>Horarios de Atención</h2>
+        <div class="horarios">
+            <p><strong>Lunes a Viernes:</strong> 9:00 AM - 7:00 PM</p>
+            <p><strong>Sábados:</strong> 10:00 AM - 5:00 PM</p>
+            <p><strong>Domingos:</strong> Cerrado (Pedidos en línea disponibles 24/7)</p>
+            <p>Atención personalizada por teléfono o WhatsApp: +52 123 456 7890. Envíos locales en Juárez y alrededores.</p>
+        </div>
+    </section>
+
+    <section id="pedidos" class="section">
+        <h2>Haz tu Pedido</h2>
+        <div class="pedidos">
+            <p>¿Listo para ordenar? Completa el formulario y te contactaremos para confirmar detalles y envío.</p>
+            <form action="#" method="post">
+                <label for="name">Nombre:</label><br>
+                <input type="text" id="name" name="name" required><br><br>
+                <label for="email">Email:</label><br>
+                <input type="email" id="email" name="email" required><br><br>
+                <label for="phone">Teléfono:</label><br>
+                <input type="tel" id="phone" name="phone" required><br><br>
+                <label for="product">Producto Deseado:</label><br>
+                <select id="product" name="product" required>
+                    <option value="">Selecciona</option>
+                    <option value="rosas-eternas">Rosas Eternas</option>
+                    <option value="detalles-personalizados">Detalles Personalizados</option>
+                    <option value="perfumes-premium">Perfumes Premium</option>
+                </select><br><br>
+                <label for="message">Detalles Adicionales (ej. personalización):</label><br>
+                <textarea id="message" name="message" rows="4"></textarea><br><br>
+                <button type="submit">Enviar Pedido</button>
+            </form>
+        </div>
+    </section>
+
+    <section class="section" id="contacto">
+        <h2>Testimonios</h2>
+        <p>"Las rosas eternas de Eterno son perfectas para mi colección. ¡Nunca se marchitan!" - Ana L., Juárez.</p>
+        <p>"El perfume es exquisito y los detalles hicieron mi regalo único." - Carlos M.</p>
+    </section>
+
+    <section class="cta">
+        <h2>¡Oferta Especial!</h2>
+        <p>Descuento del 15% en tu primer pedido. ¡Compra ahora y recibe envío gratis!</p>
+        <button onclick="window.location.href='https://tu-tienda-shopify.com'">Ir a la Tienda</button>
+    </section>
+
+    <footer>
+        <p>&copy; 2023 Eterno. Todos los derechos reservados. | <a href="#" style="color: white;">Política de Privacidad</a> | <a href="#" style="color: white;">Términos de Servicio</a></p>
+        <p>Síguenos en Facebook: <a href="https://facebook.com/juarezdespierta" style="color: white;">Juarez Despierta</a></p>
+    </footer>
+
+    <script>
+        document.querySelector('form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('¡Pedido enviado! Te contactaremos pronto.');
+        });
+    </script>
+</body>
+</html>
