@@ -1,48 +1,58 @@
-from flask import Flask, request, jsonify
-from flask_sqlalchemy import SQLAlchemy
-from flask_cors import CORS # Importamos CORS
+from flask import Flask, jsonify, request
+from flask_socketio import SocketIO, emit
+from geopy.distance import geodesic
 
 app = Flask(__name__)
-CORS(app) # Esto permite que tu página web se conecte al backend sin bloqueos
+socketio = SocketIO(app, cors_allowed_origins="*")
 
-app.config['SQLALCHEMY_DATABASE_DATABASE_URI'] = 'sqlite:///base_de_datos.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-db = SQLAlchemy(app)
+# Base de datos simulada en memoria (puedes migrar esto a tu base de datos.db luego)
+lavadores_conectados = {
+    # "id_lavador": {"lat": 19.4326, "lon": -99.1332, "status": "disponible"}
+}
 
-class Cita(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    nombre = db.Column(db.String(100), nullable=False)
-    telefono = db.Column(db.String(20), nullable=False)
-    marca_carro = db.Column(db.String(50), nullable=False)
-    modelo_carro = db.Column(db.String(50), nullable=False)
-    placa_carro = db.Column(db.String(20), nullable=False)
-    tipo_carro = db.Column(db.String(50), nullable=False)
-    fecha_hora = db.Column(db.String(50), nullable=False)
-    tipo_servicio = db.Column(db.String(50), nullable=False)
+@socketio.on('connect')
+def handle_connect():
+    print("Un usuario o lavador se ha conectado en tiempo real.")
 
-with app.app_context():
-    db.create_all()
+# 1. El lavador actualiza su ubicación constantemente desde su app
+@socketio.on('actualizar_ubicacion_lavador')
+def handle_ubicacion(data):
+    lavador_id = data['lavador_id']
+    lavadores_conectados[lavador_id] = {
+        "lat": data['latitud'],
+        "lon": data['longitud'],
+        "status": data.get('status', 'disponible')
+    }
 
-@app.route('/agendar', methods=['POST'])
-def agendar_cita():
-    data = request.get_json()
-    try:
-        nueva_cita = Cita(
-            nombre=data['nombre'],
-            telefono=data['telefono'],
-            marca_carro=data['marca_carro'],
-            modelo_carro=data['modelo_carro'],
-            placa_carro=data['placa_carro'],
-            tipo_carro=data['tipo_carro'],
-            fecha_hora=data['fecha_hora'],
-            tipo_servicio=data['tipo_servicio']
-        )
-        db.session.add(nueva_cita)
-        db.session.commit()
-        return jsonify({"status": "success", "mensaje": "¡Cita agendada con éxito!"}), 201
-    except Exception as e:
-        return jsonify({"status": "error", "mensaje": str(e)}), 400
+# 2. El cliente solicita un lavado "estilo Uber"
+@socketio.on('solicitar_lavado')
+def handle_solicitud(data):
+    cliente_lat = data['latitud']
+    cliente_lon = data['longitud']
+    cliente_id = data['cliente_id']
+    
+    lavador_mas_cercano = None
+    distancia_minima = 5.0 # Radio máximo de cobertura en kilómetros (ej. 5km)
+
+    # Buscar al lavador disponible más cercano
+    for id_lavador, info in lavadores_conectados.items():
+        if info['status'] == 'disponible':
+            distancia = geodesic((cliente_lat, cliente_lon), (info['lat'], info['lon'])).km
+            if distancia < distancia_minima:
+                distancia_minima = distancia
+                lavador_mas_cercano = id_lavador
+
+    if lavador_mas_cercano:
+        # Enviar alerta en tiempo real ÚNICAMENTE al lavador más cercano
+        emit('nueva_cita_disponible', {
+            'cliente_id': cliente_id,
+            'latitud_cliente': cliente_lat,
+            'longitud_cliente': cliente_lon
+        }, room=lavador_mas_cercano) # Necesitarás manejar 'rooms' para cada usuario en producción
+        emit('respuesta_solicitud', {'status': 'Buscando... lavador encontrado, esperando aceptación.'})
+    else:
+        emit('respuesta_solicitud', {'status': 'No hay lavadores disponibles cerca en este momento.'})
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000) # El host '0.0.0.0' permite conexiones externas
+    socketio.run(app, debug=True)
    
