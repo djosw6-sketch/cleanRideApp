@@ -55,4 +55,26 @@ def handle_solicitud(data):
 
 if __name__ == '__main__':
     socketio.run(app, debug=True)
-   
+   import sqlite3
+
+def inicializar_base_de_datos():
+    conexion = sqlite3.connect('base de datos.db')
+    cursor = conexion.cursor()
+    
+    # Crear la tabla de citas si no existe
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS citas (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            cliente_id TEXT NOT NULL,
+            lavador_id TEXT,
+            latitud REAL NOT NULL,
+            longitud REAL NOT NULL,
+            estado TEXT NOT NULL, -- 'pendiente', 'aceptado', 'en_camino', 'completado'
+            fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+    ''')
+    conexion.commit()
+    conexion.close()
+
+# Ejecutar la creación al arrancar el servidor
+inicializar_base_de_datos()
