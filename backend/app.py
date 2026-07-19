@@ -23,7 +23,6 @@ def handle_ubicacion(data):
         "lon": data['longitud'],
         "status": data.get('status', 'disponible')
     }
-
 # 2. El cliente solicita un lavado "estilo Uber"
 @socketio.on('solicitar_lavado')
 def handle_solicitud(data):
@@ -31,6 +30,20 @@ def handle_solicitud(data):
     cliente_lon = data['longitud']
     cliente_id = data['cliente_id']
     
+    # --- GUARDAR EN LA BASE DE DATOS REAL ---
+    conexion = sqlite3.connect('base de datos.db')
+    cursor = conexion.cursor()
+    cursor.execute('''
+        INSERT INTO citas (cliente_id, latitud, longitud, estado) 
+        VALUES (?, ?, ?, ?)
+    ''', (cliente_id, cliente_lat, cliente_lon, 'pendiente'))
+    
+    cita_id = cursor.lastrowid # Este es el número de cita único creado
+    conexion.commit()
+    conexion.close()
+    print(f"Cita #{cita_id} guardada con éxito en la base de datos.")
+    # ----------------------------------------
+
     lavador_mas_cercano = None
     distancia_minima = 5.0 # Radio máximo de cobertura en kilómetros (ej. 5km)
 
@@ -43,35 +56,17 @@ def handle_solicitud(data):
                 lavador_mas_cercano = id_lavador
 
     if lavador_mas_cercano:
-        # Enviar alerta en tiempo real ÚNICAMENTE al lavador más cercano
+        # Enviar alerta al lavador incluyendo el número de cita (cita_id)
         emit('nueva_cita_disponible', {
+            'cita_id': cita_id,
             'cliente_id': cliente_id,
             'latitud_cliente': cliente_lat,
             'longitud_cliente': cliente_lon
-        }, room=lavador_mas_cercano) # Necesitarás manejar 'rooms' para cada usuario en producción
-        emit('respuesta_solicitud', {'status': 'Buscando... lavador encontrado, esperando aceptación.'})
+        }, room=lavador_mas_cercano)
+        emit('respuesta_solicitud', {'status': f'Buscando... Lavador encontrado para la cita #{cita_id}. Esperando aceptación.'})
     else:
         emit('respuesta_solicitud', {'status': 'No hay lavadores disponibles cerca en este momento.'})
 
-if __name__ == '__main__':
-    socketio.run(app, debug=True)
-   import sqlite3
-
-def inicializar_base_de_datos():
-    conexion = sqlite3.connect('base de datos.db')
-    cursor = conexion.cursor()
-    
-    # Crear la tabla de citas si no existe
-    cursor.execute('''
-        CREATE TABLE IF NOT EXISTS citas (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            cliente_id TEXT NOT NULL,
-            lavador_id TEXT,
-            latitud REAL NOT NULL,
-            longitud REAL NOT NULL,
-            estado TEXT NOT NULL, -- 'pendiente', 'aceptado', 'en_camino', 'completado'
-            fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        )
     ''')
     conexion.commit()
     conexion.close()
